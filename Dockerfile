@@ -1,4 +1,4 @@
-FROM ruby:2.6.3-alpine
+FROM ruby:2.6.6-alpine
 
 MAINTAINER Darren Oakley <daz.oakley@gmail.com>
 
