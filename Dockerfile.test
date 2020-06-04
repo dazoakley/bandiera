@@ -21,7 +21,7 @@ WORKDIR $APP_HOME
 COPY . $APP_HOME
 
 # bundle
-RUN gem install bundler --no-rdoc --no-ri
+RUN gem install bundler
 RUN bundle install --jobs 4
 
 EXPOSE 5000
