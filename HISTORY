@@ -1,3 +1,9 @@
+= 3.5.10 / 2020-06-03
+
+Update target ruby version to 2.6.6, (test suite still runs on 2.5 also).
+
+Numerous security updates.
+
 = 3.5.9 / 2018-11-16
 
 Update dependencies including a security patch for rack.
