@@ -114,7 +114,7 @@ GEM
     public_suffix (4.0.5)
     puma (3.12.6)
     puma (3.12.6-java)
-    rack (2.2.2)
+    rack (2.2.3)
     rack-cors (1.0.5)
       rack (>= 1.6.0)
     rack-flash3 (1.0.5)
