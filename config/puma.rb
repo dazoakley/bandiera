@@ -13,7 +13,6 @@ max_no_of_threads = Integer(ENV['MAX_THREADS'] || 32)
 
 tag               'bandiera'
 environment       ENV['RACK_ENV'] || 'production'
-daemonize         false
 worker_timeout    15
 
 pidfile           ENV['PID_FILE'] if ENV['PID_FILE']

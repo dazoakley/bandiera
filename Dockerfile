@@ -20,6 +20,7 @@ COPY Gemfile.lock Gemfile.lock
 
 RUN bundle config set --local without 'test' && \
   bundle config set --local deployment 'true' && \
+  bundle config set --local frozen 'true' && \
   bundle install --jobs 4
 
 COPY . .
@@ -31,4 +32,4 @@ RUN mkdir ${prometheus_multiproc_dir}
 
 EXPOSE 5000
 
-CMD ["puma"]
+CMD ["bundle", "exec", "puma"]
