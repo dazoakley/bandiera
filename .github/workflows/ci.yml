@@ -21,6 +21,19 @@ jobs:
       - name: Run tests
         run: bundle exec rspec
 
+  trivy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Trivy vulnerability scanner on Gemfile
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          format: table
+          exit-code: 1
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
   docker:
     runs-on: ubuntu-latest
     steps:
