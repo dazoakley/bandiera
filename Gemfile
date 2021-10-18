@@ -8,7 +8,7 @@ gem 'jdbc-postgres', platform: :jruby
 gem 'lru_redux'
 gem 'macmillan-utils'
 gem 'mysql2', platform: :ruby
-gem 'nokogiri', '~> 1.10.8'
+gem 'nokogiri'
 gem 'pg', platform: :ruby
 gem 'prometheus-client-mmap'
 gem 'puma', require: false
@@ -20,11 +20,8 @@ gem 'sequel'
 gem 'sinatra'
 gem 'statsd-ruby', require: false
 
-group :development do
-  gem 'shotgun'
-end
-
 group :test do
+  gem 'shotgun'
   gem 'rubocop'
   gem 'sqlite3', platform: :ruby
   gem 'jdbc-sqlite3', platform: :jruby

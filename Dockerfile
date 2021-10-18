@@ -1,20 +1,26 @@
-FROM ruby:2.6.6-alpine
+FROM ruby:2.7.4-alpine
 
-MAINTAINER Darren Oakley <daz.oakley@gmail.com>
+LABEL org.opencontainers.image.authors="daz.oakley@gmail.com"
 
-RUN apk add --update --no-cache build-base ruby-dev libxml2-dev libxslt-dev postgresql-dev mysql-dev openssl ca-certificates wget && \
-  update-ca-certificates
+RUN apk update && \
+  apk upgrade && \
+  apk add build-base ruby-dev libxml2-dev libxslt-dev postgresql-dev mysql-dev openssl ca-certificates wget && \
+  update-ca-certificates && \
+  rm -rf /var/cache/apk/*
 
-RUN gem install bundler
-
-RUN addgroup bandiera && adduser -D -G bandiera -h /home/bandiera bandiera
+RUN addgroup bandiera && \
+  adduser -D -G bandiera -h /home/bandiera bandiera
 
 WORKDIR /home/bandiera
 
+RUN gem install bundler
+
 COPY Gemfile Gemfile
 COPY Gemfile.lock Gemfile.lock
-RUN bundle config set without 'test' \
-  && bundle install --retry 10 --jobs 4 --without test
+
+RUN bundle config set --local without 'test' && \
+  bundle config set --local deployment 'true' && \
+  bundle install --jobs 4
 
 COPY . .
 
