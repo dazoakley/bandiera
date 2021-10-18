@@ -1,2 +1,9 @@
-.git
+.bundle
 .dockerignore
+.env
+.git
+.idea
+artifacts*
+config/database.yml
+coverage*
+newrelic_agent.log
