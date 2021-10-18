@@ -1,3 +1,9 @@
+= 3.5.11 / 2021-10-18
+
+Update target ruby version to 2.7.4 and update (gem) dependencies.
+
+Numerous security updates.
+
 = 3.5.10 / 2020-06-03
 
 Update target ruby version to 2.6.6, (test suite still runs on 2.5 also).
@@ -41,21 +47,22 @@ Thanks @samzilverberg for the updates. :)
 = 3.5.3 / 2018-07-17
 
 Dockerfile update to include additional packages:
- - openssl
- - ca-certificates
+
+- openssl
+- ca-certificates
 
 This solves some SSL issues on alpine based images.
 
 = 3.5.2 / 2018-07-17
 
-Addition of a new ENV variable `LOG_LEVEL`.  By default Bandiera will log at
+Addition of a new ENV variable `LOG_LEVEL`. By default Bandiera will log at
 `INFO` upwards, if this is not your preference, you can now change this using
-this variable.  Accepted inputs are the constants in
+this variable. Accepted inputs are the constants in
 [Logger::Severity](https://ruby-doc.org/stdlib-2.5.1/libdoc/logger/rdoc/Logger/Severity.html)
 i.e. `DEBUG`, `INFO` etc.
 
 Added some DEBUG logging outputting the response from Bandiera to a v2 API
-request.  This doesn't contain any user identifying data, but can be useful for
+request. This doesn't contain any user identifying data, but can be useful for
 users/admins when debugging flag/api issues.
 
 = 3.5.1 / 2018-07-13
@@ -75,19 +82,19 @@ Addition of a new groups page on the bandiera UI. Thanks @samzilverberg!
 = 3.4.2 / 2018-05-16
 
 Update logging to remove user identifiable data in preparation for the GDPR
-laws to come into effect.  Bandiera no longer logs ip addresses or user
+laws to come into effect. Bandiera no longer logs ip addresses or user
 identities (if ran under basic auth), and will not log the `user_group` URL
-param by default.  This can be re-enabled by setting the environment variable
+param by default. This can be re-enabled by setting the environment variable
 "SHOW_USER_GROUP_IN_LOGS" to "true" if it is desired.
 
 = 3.4.1 / 2018-03-07
 
-New feature - audit logs.  Whenever a feature is created, changed or removed
+New feature - audit logs. Whenever a feature is created, changed or removed
 the activity is output to the logs; if an environment variable of
 `RECORD_AUDIT_RECORDS` is set to `true`, these log messages will be persisted
-in the database.  Thanks @jshiell!
+in the database. Thanks @jshiell!
 
-New feature - healthcheck endpoints.  `/healthz`, `/status/live` and
+New feature - healthcheck endpoints. `/healthz`, `/status/live` and
 `/status/ready` can now be probed by external healthcheck applications.
 
 = 3.4.0 / 2018-02-23
@@ -110,7 +117,7 @@ https://github.com/sparklemotion/nokogiri/issues/1673)
 
 = 3.3.0 / 2017-09-18
 
-Introduce an in-process cache for feature service requests.  Thanks @jshiell
+Introduce an in-process cache for feature service requests. Thanks @jshiell
 for the contribution and @baob for the contributions to the specs! :)
 
 Update the base ruby version to 2.4.2
@@ -133,7 +140,7 @@ https://github.com/sparklemotion/nokogiri/issues/1615).
 
 = 3.1.4 / 2016-10-28
 
-Update all dependent gems.  Switch docker container image to be based off
+Update all dependent gems. Switch docker container image to be based off
 alpine linux - this makes the resulting image much smaller.
 
 = 3.1.3 / 2016-06-29
@@ -156,7 +163,7 @@ Update Airbrake code to support the v5 (Airbrake) API
 
 = 3.0.0 / 2016-02-08
 
-Removed support for a `config/database.yml` file.  Use environment variables
+Removed support for a `config/database.yml` file. Use environment variables
 people.
 
 Docker setup updated to use docker-machine and docker-compose. Thanks @kimptoc!
@@ -221,7 +228,7 @@ Make "User Group" matches case in-sensitive
 
 = 2.2.0 / 2014-10-07
 
-[Feature] Bandiera *should* now support all RDBMs supported by Sequel (note: we
+[Feature] Bandiera _should_ now support all RDBMs supported by Sequel (note: we
 ONLY test on MySQL at present)
 
 Test suite now runs using an in-memory SQLite database
