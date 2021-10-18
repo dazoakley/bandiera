@@ -108,14 +108,10 @@ All other documentation can be found on the [Bandiera Wiki](https://github.com/s
 
 # License
 
-[&copy; 2015, Springer Nature](LICENSE.txt).
+[&copy; 2015, Springer Nature][info-license].
 
 Bandiera is licensed under the [GNU General Public License 3.0][gpl].
 
 [gpl]: http://www.gnu.org/licenses/gpl-3.0.html
 [info-license]: LICENSE
-[info-build]: https://travis-ci.org/springernature/bandiera
-[info-dependencies]: https://gemnasium.com/springernature/bandiera
 [shield-license]: https://img.shields.io/badge/license-GPLv3-blue.svg
-[shield-build]: https://img.shields.io/travis/springernature/bandiera/master.svg
-[shield-dependencies]: https://img.shields.io/gemnasium/springernature/bandiera.svg
