@@ -3,15 +3,13 @@ source 'https://rubygems.org'
 gem 'airbrake', require: false
 gem 'dotenv'
 gem 'erubis'
-gem 'jdbc-mysql', platform: :jruby
-gem 'jdbc-postgres', platform: :jruby
 gem 'lru_redux'
 gem 'macmillan-utils'
-gem 'mysql2', platform: :ruby
+gem 'mysql2'
 gem 'nokogiri'
-gem 'pg', platform: :ruby
+gem 'pg'
 gem 'prometheus-client-mmap'
-gem 'puma', require: false
+gem 'puma'
 gem 'rack-cors'
 gem 'rack-flash3'
 gem 'rake'
@@ -23,8 +21,7 @@ gem 'statsd-ruby', require: false
 group :test do
   gem 'shotgun'
   gem 'rubocop'
-  gem 'sqlite3', platform: :ruby
-  gem 'jdbc-sqlite3', platform: :jruby
+  gem 'sqlite3'
   gem 'rspec'
   gem 'rack-test'
   gem 'capybara'

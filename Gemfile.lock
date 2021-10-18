@@ -218,9 +218,6 @@ DEPENDENCIES
   dotenv
   erubis
   guard-rspec
-  jdbc-mysql
-  jdbc-postgres
-  jdbc-sqlite3
   lru_redux
   macmillan-utils
   mysql2
