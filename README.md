@@ -2,20 +2,18 @@
 
 Bandiera is a simple, stand-alone feature flagging service that is not tied to
 any existing web framework or language as all communication is via a simple
-REST API.  It also has a simple web interface for setting up and configuring
+REST API. It also has a simple web interface for setting up and configuring
 flags.
 
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
-[![Build status][shield-build]][info-build]
-[![Dependencies][shield-dependencies]][info-dependencies]
+[![CI](https://github.com/dazoakley/bandiera/actions/workflows/ci.yml/badge.svg)](https://github.com/dazoakley/bandiera/actions/workflows/ci.yml)
 [![GPLv3 licensed][shield-license]][info-license]
 
 # Bandiera Client Libraries
 
-* **Ruby** - [https://github.com/springernature/bandiera-client-ruby](https://github.com/springernature/bandiera-client-ruby)
-* **Node** - [https://github.com/springernature/bandiera-client-node](https://github.com/springernature/bandiera-client-node)
-* **Scala** - [https://github.com/springernature/bandiera-client-scala](https://github.com/springernature/bandiera-client-scala)
-* **PHP** - [https://github.com/springernature/bandiera-client-php](https://github.com/springernature/bandiera-client-php)
+- **Ruby** - [https://github.com/springernature/bandiera-client-ruby](https://github.com/springernature/bandiera-client-ruby)
+- **Node** - [https://github.com/springernature/bandiera-client-node](https://github.com/springernature/bandiera-client-node)
+- **Scala** - [https://github.com/springernature/bandiera-client-scala](https://github.com/springernature/bandiera-client-scala)
+- **PHP** - [https://github.com/springernature/bandiera-client-php](https://github.com/springernature/bandiera-client-php)
 
 # Getting Started (Developers)
 
@@ -23,15 +21,10 @@ There are two ways you can work with/develop the Bandiera code-base - locally
 on your own machine (connected to your own database etc.); or within docker
 containers.
 
-We prefer the docker setup as this is most likely closer to a production setup
-than your local machine (unless you run the same OS and setup as your
-production boxes).
-
 ## Docker Setup
 
 To get started, you will need to install [docker](https://www.docker.com/) and
-[docker-compose](https://docs.docker.com/compose/) - see the quick install instructions below for your
-OS.
+[docker-compose](https://docs.docker.com/compose/).
 
 Then run the following command:
 
@@ -67,26 +60,11 @@ docker-compose up test
 This uses [Guard](https://github.com/guard/guard) and will run the test suite
 every time you update one of the files.
 
-### Mac OS X
-
-Install [Docker for Mac](https://www.docker.com/docker-mac)
-
-### Linux
-
-Install docker and docker-compose by following the Docker instructions
-[here](https://docs.docker.com/installation/#installation).
-
-You're now ready to go.
-
-### Windows
-
-Install [Docker for Windows](https://www.docker.com/docker-windows)
-
 ## Local Setup
 
 First, you will need the version of Ruby defined in the
 [.ruby-version](.ruby-version) file and [bundler](http://bundler.io/)
-installed.  You will also need to install [phantomjs](http://phantomjs.org/) as
+installed. You will also need to install [phantomjs](http://phantomjs.org/) as
 this is used by the test suite for integration tests.
 
 After that, set up your database (MySQL or PostgreSQL) ready for
