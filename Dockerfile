@@ -32,4 +32,4 @@ RUN mkdir ${prometheus_multiproc_dir}
 
 EXPOSE 5000
 
-CMD ["bundle", "exec", "puma"]
+CMD ["./entrypoint.sh"]
