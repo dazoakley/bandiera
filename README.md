@@ -15,65 +15,26 @@ flags.
 - **Scala** - [https://github.com/springernature/bandiera-client-scala](https://github.com/springernature/bandiera-client-scala)
 - **PHP** - [https://github.com/springernature/bandiera-client-php](https://github.com/springernature/bandiera-client-php)
 
+# Deployment
+
+The recommended way to run bandiera in production is via docker. The only dependency is a MySQL or PostgreSQL database.
+
+Simply pull/run the bandiera image: `docker.io/dazoakley/bandiera` and pass in the `DATABASE_URL` connection string as an environment variable described below.
+
 # Getting Started (Developers)
 
-There are two ways you can work with/develop the Bandiera code-base - locally
-on your own machine (connected to your own database etc.); or within docker
-containers.
+First, you will need the version of Ruby defined in the [.ruby-version](.ruby-version) file and [bundler](http://bundler.io/) installed. You will also need to install [phantomjs](http://phantomjs.org/) as this is used by the test suite for integration tests.
 
-## Docker Setup
-
-To get started, you will need to install [docker](https://www.docker.com/) and
-[docker-compose](https://docs.docker.com/compose/).
-
-Then run the following command:
-
-```
-docker-compose build
-docker-compose up -d db
-```
-
-This runs the db in the background under docker.
-
-```
-docker-compose up app
-```
-
-This builds the docker containers for Bandiera, sets up your development
-database, and then starts the service.
-
-You can now visit the web interface at
-[http://127.0.0.1:5000](http://127.0.0.1:5000) if you are on Linux, or
-[http://192.168.59.103:5000](http://192.168.59.103:5000) on Mac OS X (if this
-doesn't work check the IP of your docker machine with `docker-machine ip `docker-machine active``).
-
-You're all set to develop Bandiera now!
-
-You can also run the test suite within a docker container, simply run the
-following command in another terminal (or tab):
-
-```
-docker-compose up test
-```
-
-This uses [Guard](https://github.com/guard/guard) and will run the test suite
-every time you update one of the files.
-
-## Local Setup
-
-First, you will need the version of Ruby defined in the
-[.ruby-version](.ruby-version) file and [bundler](http://bundler.io/)
-installed. You will also need to install [phantomjs](http://phantomjs.org/) as
-this is used by the test suite for integration tests.
-
-After that, set up your database (MySQL or PostgreSQL) ready for
-Bandiera (just an empty schema for now), and setup an environment variable
-with a [Sequel connection
-string](http://sequel.jeremyevans.net/rdoc/files/doc/opening_databases_rdoc.html)
-i.e.
+After that, set up your database (MySQL or PostgreSQL) ready for Bandiera (just an empty schema for now), and setup an environment variable with a [Sequel connection string](http://sequel.jeremyevans.net/rdoc/files/doc/opening_databases_rdoc.html) i.e.
 
 ```
 export DATABASE_URL='postgres://bandiera:bandiera@localhost/bandiera'
+```
+
+If you don't have a local database server setup you can use PostgreSQL configured in the docker-compose file like so (and set your DATABASE_URL as above):
+
+```
+docker-compose up -d db
 ```
 
 Now install the dependencies, setup the database and run the app server:
@@ -103,7 +64,7 @@ Now you're ready to go.
 
 # Other Documentation
 
-All other documentation can be found on the [Bandiera Wiki](https://github.com/springernature/bandiera/wiki)
+All other documentation can be found on the [Bandiera Wiki](https://github.com/dazoakley/bandiera/wiki)
 
 # License
 

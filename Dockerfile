@@ -30,6 +30,8 @@ USER bandiera
 ENV prometheus_multiproc_dir=/tmp/prometheus_multiproc_dir
 RUN mkdir ${prometheus_multiproc_dir}
 
+ENV RACK_ENV=production LOG_TO_STDOUT=true
+
 EXPOSE 5000
 
 CMD ["./entrypoint.sh"]
