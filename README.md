@@ -36,7 +36,6 @@ docker-compose up -d db
 This runs the db in the background under docker.
 
 ```
-docker-compose run app bundle exec rake db:migrate
 docker-compose up app
 ```
 
