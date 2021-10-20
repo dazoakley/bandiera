@@ -2,29 +2,14 @@ version: "2"
 services:
   app:
     build: .
-    volumes:
-      - .:/home/bandiera
-    command: "bundle exec shotgun -p 5000 -o 0.0.0.0 -s puma"
     ports:
       - "5000:5000"
     environment:
-      RACK_ENV: "development"
       DATABASE_URL: "postgres://bandiera:bandiera@db/bandiera"
-      LOG_TO_STDOUT: "true"
+      RECORD_AUDIT_RECORDS: "true"
       RACK_CORS_ORIGINS: "*"
     links:
       - db
-
-  test:
-    build:
-      context: ./
-      dockerfile: Dockerfile.test
-    volumes:
-      - .:/home/bandiera
-    command: "bundle exec guard -i -p -l 1"
-    environment:
-      RACK_ENV: "test"
-      LOG_TO_STDOUT: "true"
 
   db:
     image: postgres:alpine
