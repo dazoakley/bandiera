@@ -4,16 +4,41 @@ module Bandiera
       @db = db
     end
 
-    def record(audit_context, action, object_name, params = {})
-      audit_record = AuditRecord.new(
+    def record_add_object(audit_context, object)
+      AuditRecord.create(
         user: audit_context.user_id,
-        action: action,
-        object: object_name.to_s,
-        params: format(params)
+        action: :create,
+        object: object.class,
+        object_id: object.id,
+        new_object: object.to_json(except: [:updated_at, :created_at])
       )
-      audit_record.save
-    rescue => e
-      Bandiera.logger.error("Audit logging failed: #{e.message}")
+    rescue => err
+      Bandiera.logger.error("Audit logging (#record_add_object) failed: #{err.message}")
+    end
+
+    def record_update_object(audit_context, old_object, new_object)
+      AuditRecord.create(
+        user: audit_context.user_id,
+        action: :update,
+        object: old_object.class,
+        object_id: old_object.id,
+        old_object: old_object.to_json(except: [:updated_at, :created_at]),
+        new_object: new_object.to_json(except: [:updated_at, :created_at])
+      )
+    rescue => err
+      Bandiera.logger.error("Audit logging (#record_update_object) failed: #{err.message}")
+    end
+
+    def record_delete_object(audit_context, object)
+      AuditRecord.create(
+        user: audit_context.user_id,
+        action: :delete,
+        object: object.class,
+        object_id: object.id,
+        old_object: object.to_json(except: [:updated_at, :created_at])
+      )
+    rescue => err
+      Bandiera.logger.error("Audit logging (#record_delete_object) failed: #{err.message}")
     end
 
     private

@@ -12,6 +12,8 @@ module Bandiera
       end
     end
 
+    attr_reader :audit_log
+
     def initialize(audit_log = BlackholeAuditLog.new, db = Db.connect)
       @audit_log = audit_log
       @db = db
@@ -26,9 +28,15 @@ module Bandiera
     end
 
     def add_group(audit_context, group)
-      result = Group.find_or_create(name: group)
-      @audit_log.record(audit_context, :add, :group, name: group)
+      result = Group.create(name: group)
+      audit_log.record_add_object(audit_context, result)
       result
+    end
+
+    def find_or_create_group(audit_context, name)
+      group = Group.find(name: name)
+      group ||= add_group(audit_context, name)
+      group
     end
 
     def fetch_groups
@@ -49,12 +57,16 @@ module Bandiera
     end
 
     def add_feature(audit_context, data)
-      data[:group] = Group.find_or_create(name: data[:group])
-      lookup       = { name: data[:name], group: data[:group] }
-      result = Feature.update_or_create(lookup, data)
-      @audit_log.record(audit_context, :add, :feature,
-        name: data[:name], group: data[:group][:name], active: data[:active])
-      result
+      data[:group] = find_or_create_group(audit_context, data[:group])
+
+      if feature = Feature.find(name: data[:name], group_id: data[:group].id)
+        # FIXME: should we really be updating here? Refactor?
+        update_feature(audit_context, data[:group].name, data[:name], data)
+      else
+        feature = Feature.create(data)
+        audit_log.record_add_object(audit_context, feature)
+        feature
+      end
     end
 
     def add_features(audit_context, features)
@@ -62,16 +74,15 @@ module Bandiera
     end
 
     def remove_feature(audit_context, group, name)
-      group_id      = find_group_id(group)
-      affected_rows = Feature.where(group_id: group_id, name: name).delete
-      raise FeatureNotFound, "Cannot find feature '#{name}'" unless affected_rows > 0
-      @audit_log.record(audit_context, :remove, :feature, name: name, group: group)
+      feature = fetch_feature(group, name)
+      raise FeatureNotFound, "Cannot find feature '#{name}'" if feature.nil?
+      audit_log.record_delete_object(audit_context, feature)
+      feature.delete
     end
 
     def update_feature(audit_context, group, name, params)
-      group_id  = find_group_id(group)
-      feature   = Feature.first(group_id: group_id, name: name)
-      raise FeatureNotFound, "Cannot find feature '#{name}'" unless feature
+      feature = fetch_feature(group, name)
+      raise FeatureNotFound, "Cannot find feature '#{name}'" if feature.nil?
 
       fields = {
         description: params[:description],
@@ -81,9 +92,11 @@ module Bandiera
         start_time:  params[:start_time],
         end_time:    params[:end_time]
       }.delete_if { |_k, v| v.nil? }
-      result = feature.update(fields)
-      @audit_log.record(audit_context, :update, :feature, name: name, group: group, fields: fields)
-      result
+
+      original_feature = feature.dup
+      updated_feature = feature.update(fields)
+      audit_log.record_update_object(audit_context, original_feature, updated_feature)
+      updated_feature
     end
 
     private
