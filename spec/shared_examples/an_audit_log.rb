@@ -2,8 +2,16 @@
 
 shared_examples_for 'an audit log' do
   describe 'logging methods' do
-    it 'responds to #record?' do
-      should respond_to(:record).with(4).arguments
+    it 'responds to #record_add_object' do
+      should respond_to(:record_add_object).with(2).arguments
+    end
+
+    it 'responds to #record_update_object' do
+      should respond_to(:record_update_object).with(3).arguments
+    end
+
+    it 'responds to #record_delete_object' do
+      should respond_to(:record_delete_object).with(2).arguments
     end
   end
 end
