@@ -6,7 +6,6 @@ services:
       - "5000:5000"
     environment:
       DATABASE_URL: "postgres://bandiera:bandiera@db/bandiera"
-      RECORD_AUDIT_RECORDS: "true"
       RACK_CORS_ORIGINS: "*"
     links:
       - db

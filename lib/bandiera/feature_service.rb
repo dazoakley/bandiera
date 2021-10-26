@@ -14,7 +14,7 @@ module Bandiera
 
     attr_reader :audit_log
 
-    def initialize(audit_log = BlackholeAuditLog.new, db = Db.connect)
+    def initialize(audit_log = LoggingAuditLog.new, db = Db.connect)
       @audit_log = audit_log
       @db = db
     end
