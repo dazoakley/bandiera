@@ -11,7 +11,7 @@ module Bandiera
   autoload :VERSION,                'bandiera/version'
   autoload :Db,                     'bandiera/db'
   autoload :WebAuditContext,        'bandiera/web_audit_context'
-  autoload :LoggingAuditLog,        'bandiera/logging_audit_log'
+  autoload :AuditLogger,            'bandiera/audit_logger'
   autoload :AuditRecord,            'bandiera/audit_record'
   autoload :Group,                  'bandiera/group'
   autoload :Feature,                'bandiera/feature'

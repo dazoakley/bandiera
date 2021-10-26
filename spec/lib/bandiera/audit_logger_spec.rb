@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-RSpec.describe Bandiera::LoggingAuditLog do
+RSpec.describe Bandiera::AuditLogger do
   let(:db) { Bandiera::Db.connect }
   let(:audit_context) { Bandiera::AnonymousAuditContext.new }
-  subject { Bandiera::LoggingAuditLog.new(db) }
+  subject { Bandiera::AuditLogger.new(db) }
 
   let(:group_obj) { Bandiera::Group.create(name: 'foo') }
   let(:feature_obj) { Bandiera::Feature.create(group: group_obj, name: 'foo-feat', active: true)}

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe Bandiera::FeatureService do
   let(:audit_context) { Bandiera::AnonymousAuditContext.new }
-  let(:audit_log) { Bandiera::LoggingAuditLog.new }
+  let(:audit_log) { Bandiera::AuditLogger.new }
   subject { Bandiera::FeatureService.new(audit_log) }
 
   it_behaves_like 'a feature service'
