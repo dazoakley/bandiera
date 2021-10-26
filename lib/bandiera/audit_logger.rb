@@ -1,5 +1,5 @@
 module Bandiera
-  class LoggingAuditLog
+  class AuditLogger
     def initialize(db = Db.connect)
       @db = db
     end
