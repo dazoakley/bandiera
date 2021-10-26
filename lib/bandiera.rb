@@ -2,7 +2,6 @@ require 'dotenv'
 require 'json'
 require 'logger'
 require 'sequel'
-require 'syslog-logger'
 require_relative 'hash'
 
 GC::Profiler.enable
@@ -31,11 +30,7 @@ module Bandiera
     def logger
       return @logger if @logger
 
-      @logger = if ENV['LOG_TO_STDOUT']
-                  Logger.new($stdout)
-                else
-                  Logger::Syslog.new('bandiera', Syslog::LOG_LOCAL0)
-                end
+      @logger = Logger.new($stdout)
 
       if ENV['STACKDRIVER_JSON_LOGGER']
         require 'logger/stackdriver_json_formatter'
