@@ -2,6 +2,8 @@
 
 Re-implementation of the audit logging feature - this unfortunately is a backwards incompatible change, hence the major version bump. As part of the database migration it **will** truncate your audit_records table. Audit logging is now permanently on (with no option to remove).
 
+We have removed the syslog logging capabilities from Bandiera and now default to logging to STDOUT. This is the norm for containerised applications and running via a container is our recommended deployment option.
+
 = 3.5.11 / 2021-10-18
 
 Update target ruby version to 2.7.4 and update (gem) dependencies.
