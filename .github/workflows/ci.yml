@@ -66,7 +66,7 @@ jobs:
           ignore-unfixed: true
           vuln-type: os,library
           severity: CRITICAL,HIGH
-          skip-dirs: /usr/local/bundle
+          skip-dirs: /usr/local/lib/ruby/gems
       - name: Login to DockerHub
         uses: docker/login-action@v1
         if: startsWith(github.ref, 'refs/tags/')
