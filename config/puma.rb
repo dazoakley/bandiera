@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 APP_ROOT = File.expand_path(File.dirname(File.dirname(__FILE__)))
 
 $LOAD_PATH.unshift File.join(APP_ROOT, 'lib')

@@ -6,13 +6,13 @@ require 'rack/test'
 RSpec.describe Bandiera::APIv2 do
   include Rack::Test::Methods
 
-  let(:instance) { Bandiera::APIv2 }
+  let(:instance) { described_class }
   let(:audit_context) { Bandiera::AnonymousAuditContext.new }
   let(:app) do
     app_instance = instance
     Rack::Builder.new do
       use Macmillan::Utils::StatsdMiddleware, client: Bandiera.statsd
-      run Bandiera::APIv2
+      run described_class
       run app_instance
     end
   end
@@ -26,15 +26,38 @@ RSpec.describe Bandiera::APIv2 do
 
   before do
     service = instance.settings.feature_service
-    service.add_features(audit_context, [
-                           { group: 'pubserv',    name: 'show_subjects',   description: '', active: true, user_groups: { list: ['editor'], regex: '' } },
-                           { group: 'pubserv',    name: 'show_metrics',    description: '', active: false },
-                           { group: 'pubserv',    name: 'use_content_hub', description: '', active: true },
-                           { group: 'shunter',    name: 'stats_logging',   description: '', active: true },
-                           { group: 'shunter',    name: 'use_img_serv',    description: '', active: true, percentage: 50 },
-                           { group: 'parliament', name: 'in_dissolution',  description: '', active: true, start_time: Time.now - 100, end_time: Time.now + 100 },
-                           { group: 'parliament', name: 'show_search',     description: '', active: true, start_time: Time.now + 100, end_time: Time.now + 200 }
-                         ])
+    service.add_features(
+      audit_context,
+      [
+        {
+          group:       'pubserv',
+          name:        'show_subjects',
+          description: '',
+          active:      true,
+          user_groups: { list: ['editor'], regex: '' }
+        },
+        { group: 'pubserv', name: 'show_metrics', description: '', active: false },
+        { group: 'pubserv', name: 'use_content_hub', description: '', active: true },
+        { group: 'shunter', name: 'stats_logging', description: '', active: true },
+        { group: 'shunter', name: 'use_img_serv', description: '', active: true, percentage: 50 },
+        {
+          group:       'parliament',
+          name:        'in_dissolution',
+          description: '',
+          active:      true,
+          start_time:  Time.now - 100,
+          end_time:    Time.now + 100
+        },
+        {
+          group:       'parliament',
+          name:        'show_search',
+          description: '',
+          active:      true,
+          start_time:  Time.now + 100,
+          end_time:    Time.now + 200
+        }
+      ]
+    )
   end
 
   describe 'GET /all' do
@@ -66,7 +89,7 @@ RSpec.describe Bandiera::APIv2 do
 
     it 'returns a warning if the correct params are not passed when there are user_group or percentage features' do
       get '/all'
-      expect(last_response_data['warning']).to_not be_nil
+      expect(last_response_data['warning']).not_to be_nil
 
       get '/all', user_group: 'wibble', user_id: 12_345
       expect(last_response_data['warning']).to be_nil
@@ -101,7 +124,7 @@ RSpec.describe Bandiera::APIv2 do
 
       it 'returns a warning if the correct params are not passed when there are user_group or percentage features' do
         get '/groups/pubserv/features'
-        expect(last_response_data['warning']).to_not be_nil
+        expect(last_response_data['warning']).not_to be_nil
 
         get '/groups/pubserv/features', user_group: 'wibble', user_id: 12_345
         expect(last_response_data['warning']).to be_nil
@@ -131,8 +154,8 @@ RSpec.describe Bandiera::APIv2 do
       end
 
       it 'returns a warning' do
-        expect(@data['warning']).to_not be_nil
-        expect(@data['warning']).to_not be_empty
+        expect(@data['warning']).not_to be_nil
+        expect(@data['warning']).not_to be_empty
       end
     end
   end
@@ -153,13 +176,13 @@ RSpec.describe Bandiera::APIv2 do
 
       it 'returns a warning if correct params are not passed when the feature is a user_group/percentage feature' do
         get '/groups/pubserv/features/show_subjects'
-        expect(last_response_data['warning']).to_not be_nil
+        expect(last_response_data['warning']).not_to be_nil
 
         get '/groups/pubserv/features/show_subjects', user_group: 'wibble'
         expect(last_response_data['warning']).to be_nil
 
         get '/groups/shunter/features/use_img_serv'
-        expect(last_response_data['warning']).to_not be_nil
+        expect(last_response_data['warning']).not_to be_nil
 
         get '/groups/shunter/features/use_img_serv', user_id: 12_345
         expect(last_response_data['warning']).to be_nil
@@ -189,8 +212,8 @@ RSpec.describe Bandiera::APIv2 do
       end
 
       it 'returns a warning' do
-        expect(@data['warning']).to_not be_nil
-        expect(@data['warning']).to_not be_empty
+        expect(@data['warning']).not_to be_nil
+        expect(@data['warning']).not_to be_empty
       end
     end
 
@@ -209,8 +232,8 @@ RSpec.describe Bandiera::APIv2 do
       end
 
       it 'returns a warning' do
-        expect(@data['warning']).to_not be_nil
-        expect(@data['warning']).to_not be_empty
+        expect(@data['warning']).not_to be_nil
+        expect(@data['warning']).not_to be_empty
       end
     end
   end

@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Bandiera::AnonymousAuditContext do
-  subject { Bandiera::AnonymousAuditContext.new }
+  subject { described_class.new }
 
   it_behaves_like 'an audit context'
 

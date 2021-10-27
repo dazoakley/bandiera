@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'dotenv'
 require 'json'
 require 'logger'
@@ -22,7 +24,7 @@ module Bandiera
   autoload :GUI,                    'bandiera/gui'
 
   class << self
-    def init(environment)
+    def init(_environment)
       Dotenv.load
       Db.connect
     end
@@ -41,19 +43,16 @@ module Bandiera
 
       @logger
     end
-    attr_writer :logger
+    attr_writer :logger, :statsd
 
     def statsd
-      @statsd ||= begin
-                    if ENV['STATSD_HOST'] && ENV['STATSD_PORT']
-                      build_statsd_client
-                    else
-                      require 'macmillan/utils/statsd_stub'
-                      Macmillan::Utils::StatsdStub.new
-                    end
+      @statsd ||= if ENV['STATSD_HOST'] && ENV['STATSD_PORT']
+                    build_statsd_client
+                  else
+                    require 'macmillan/utils/statsd_stub'
+                    Macmillan::Utils::StatsdStub.new
                   end
     end
-    attr_writer :statsd
 
     private
 

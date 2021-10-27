@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sinatra/base'
 require 'macmillan/utils/statsd_controller_helper'
 
@@ -13,7 +15,7 @@ module Bandiera
       set :feature_service, CachingFeatureService.new(
         FeatureService.new(AuditLogger.new),
         cache_size: ENV['CACHE_SIZE']&.to_i,
-        cache_ttl: ENV['CACHE_TTL']&.to_i
+        cache_ttl:  ENV['CACHE_TTL']&.to_i
       )
     end
 
@@ -78,7 +80,9 @@ module Bandiera
       valid_times = true
       valid_times = false if param_present?(feature[:start_time]) && !param_present?(feature[:end_time])
       valid_times = false if param_present?(feature[:end_time]) && !param_present?(feature[:start_time])
-      valid_times = false if param_present?(feature[:start_time]) && param_present?(feature[:end_time]) && !times_in_order?(feature[:start_time], feature[:end_time])
+      valid_times = false if param_present?(feature[:start_time]) && param_present?(feature[:end_time]) && !times_in_order?(
+        feature[:start_time], feature[:end_time]
+      )
 
       valid_name && param_present?(feature[:group]) && valid_times
     end

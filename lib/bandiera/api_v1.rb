@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bandiera
   class APIv1 < WebAppBase
     get '/groups' do
@@ -21,13 +23,14 @@ module Bandiera
       group_params = params.fetch('group', {})
       group_name   = group_params.fetch('name', nil)
 
-      if group_name
-        feature_service.add_group(audit_context, group_name)
-        status 201
-        render_json(group: { name: group_name })
-      else
-        raise InvalidParams, "Invalid parameters, required params are { 'group' => { 'name' => 'YOUR GROUP NAME' }  }"
+      unless group_name
+        raise InvalidParams,
+              "Invalid parameters, required params are { 'group' => { 'name' => 'YOUR GROUP NAME' }  }"
       end
+
+      feature_service.add_group(audit_context, group_name)
+      status 201
+      render_json(group: { name: group_name })
     end
 
     get '/groups/:group_name/features' do |group_name|
@@ -69,7 +72,7 @@ module Bandiera
 
       begin
         feature = feature_service.fetch_feature(group_name, feature_name)
-      rescue *[Bandiera::FeatureService::GroupNotFound, Bandiera::FeatureService::FeatureNotFound] => e
+      rescue Bandiera::FeatureService::GroupNotFound, Bandiera::FeatureService::FeatureNotFound => e
         feature        = Bandiera::Feature.stub_feature(feature_name, group_name)
         data[:warning] = e.message
       end
@@ -89,7 +92,7 @@ module Bandiera
       feature_params         = process_v1_feature_params(params.fetch('feature', {}))
       feature_params[:group] = group_name unless feature_params[:group]
 
-      with_valid_feature_params(feature_params, true) do
+      with_valid_feature_params(feature_params, inc_option_params_in_error: true) do
         feature = feature_service.update_feature(audit_context, group_name, feature_name, feature_params)
         status 200
         render_json(feature: feature.as_v1_json)
@@ -126,20 +129,24 @@ module Bandiera
     private
 
     def render_json(data)
-      data[:information] = 'You are using the v1 Bandiera API - this interface is deprecated, you should switch to use ' \
-                     'the latest version (see https://github.com/springernature/bandiera/wiki/API-Documentation for more ' \
-                     'information).'
+      data[:information] = 'You are using the v1 Bandiera API - this interface is deprecated, you should switch to ' \
+                           'use the latest version (see ' \
+                           'https://github.com/springernature/bandiera/wiki/API-Documentation for more information).'
       content_type :json
       JSON.generate(data)
     end
 
-    def with_valid_feature_params(feature, inc_option_params_in_error = false)
+    def with_valid_feature_params(feature, inc_option_params_in_error: false)
       if valid_feature_params?(feature)
         yield
       else
         error_msg = "Invalid parameters, required params are { 'feature' => { 'name' => 'FEATURE NAME', " \
                     "'description' => 'FEATURE DESCRIPTION', 'enabled' => 'TRUE OR FALSE' }  }"
-        error_msg << ", optional params are { 'feature' => { 'group' => 'GROUP NAME' } }" if inc_option_params_in_error
+
+        if inc_option_params_in_error
+          error_msg = "#{error_msg}, optional params are { 'feature' => { 'group' => 'GROUP NAME' } }"
+        end
+
         raise InvalidParams, error_msg
       end
     end

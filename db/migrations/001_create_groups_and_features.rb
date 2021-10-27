@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Sequel.migration do
   change do
     create_table(:groups) do
@@ -11,7 +13,7 @@ Sequel.migration do
       String :name, null: false
       String :description, text: true
       TrueClass :enabled, default: false
-      unique [:group_id, :name]
+      unique %i[group_id name]
     end
   end
 end

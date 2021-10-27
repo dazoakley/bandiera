@@ -6,13 +6,12 @@ require 'rack/test'
 RSpec.describe Bandiera::APIv1 do
   include Rack::Test::Methods
 
-  let(:instance) { Bandiera::APIv1 }
+  let(:instance) { described_class }
   let(:audit_context) { Bandiera::AnonymousAuditContext.new }
   let(:app) do
     app_instance = instance
     Rack::Builder.new do
       use Macmillan::Utils::StatsdMiddleware, client: Bandiera.statsd
-      run Bandiera::APIv1
       run app_instance
     end
   end
@@ -26,11 +25,11 @@ RSpec.describe Bandiera::APIv1 do
   before do
     service = instance.settings.feature_service
     service.add_features(audit_context, [
-                           { group: 'pubserv',   name: 'show_subjects',  description: 'Show all subject related features', active: false },
-                           { group: 'pubserv',   name: 'show_search',    description: 'Show the search bar',               active: true  },
-                           { group: 'pubserv',   name: 'xmas_mode',      description: 'Xmas mode: SNOWFLAKES!',            active: false },
-                           { group: 'laserwolf', name: 'enable_caching', description: 'Enable caching',                    active: false },
-                           { group: 'shunter',   name: 'stats_logging',  description: 'Log stats',                         active: true  }
+                           { group: 'pubserv', name: 'show_subjects', description: 'Show subject features', active: false },
+                           { group: 'pubserv', name: 'show_search', description: 'Show the search bar', active: true },
+                           { group: 'pubserv', name: 'xmas_mode', description: 'Xmas mode: SNOWFLAKES!', active: false },
+                           { group: 'laserwolf', name: 'enable_caching', description: 'Enable caching', active: false },
+                           { group: 'shunter', name: 'stats_logging', description: 'Log stats', active: true }
                          ])
   end
 
@@ -292,7 +291,7 @@ RSpec.describe Bandiera::APIv1 do
           feature = JSON.parse(last_response.body)['feature']
 
           put '/groups/shunter/features/stats_logging',
-            feature: feature.merge('group' => 'laserwolf', 'enabled' => 'false')
+              feature: feature.merge('group' => 'laserwolf', 'enabled' => 'false')
 
           expect(last_response).to be_successful
 
@@ -300,7 +299,7 @@ RSpec.describe Bandiera::APIv1 do
 
           updated_feature = JSON.parse(last_response.body)['feature']
 
-          expect(feature).to_not eq(updated_feature)
+          expect(feature).not_to eq(updated_feature)
         end
       end
 
@@ -383,7 +382,7 @@ RSpec.describe Bandiera::APIv1 do
               {
                 'group'       => 'pubserv',
                 'name'        => 'show_subjects',
-                'description' => 'Show all subject related features',
+                'description' => 'Show subject features',
                 'enabled'     => false
               },
               {

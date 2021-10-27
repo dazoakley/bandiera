@@ -26,15 +26,15 @@ RSpec.describe Rack::NotSoCommonLogger do
   it 'logs to rack.errors by default' do
     res = Rack::MockRequest.new(described_class.new(app)).get('/')
 
-    expect(res.errors).to_not be_empty
-    expect(res.errors).to match(%r{"GET \/ " 200 #{length} })
+    expect(res.errors).not_to be_empty
+    expect(res.errors).to match(%r{"GET / " 200 #{length} })
   end
 
   it 'logs to anything with +write+' do
     log = StringIO.new
     Rack::MockRequest.new(described_class.new(app, log)).get('/')
 
-    expect(log.string).to match(%r{"GET \/ " 200 #{length} })
+    expect(log.string).to match(%r{"GET / " 200 #{length} })
   end
 
   it 'works with standartd library logger' do
@@ -42,21 +42,21 @@ RSpec.describe Rack::NotSoCommonLogger do
     log = Logger.new(logdev)
     Rack::MockRequest.new(described_class.new(app, log)).get('/')
 
-    expect(logdev.string).to match(%r{"GET \/ " 200 #{length} })
+    expect(logdev.string).to match(%r{"GET / " 200 #{length} })
   end
 
   it 'logs - content length if header is missing' do
     res = Rack::MockRequest.new(described_class.new(app_without_length)).get('/')
 
-    expect(res.errors).to_not be_empty
-    expect(res.errors).to match(%r{"GET \/ " 200 - })
+    expect(res.errors).not_to be_empty
+    expect(res.errors).to match(%r{"GET / " 200 - })
   end
 
   it 'logs - content length if header is zero' do
     res = Rack::MockRequest.new(described_class.new(app_with_zero_length)).get('/')
 
-    expect(res.errors).to_not be_empty
-    expect(res.errors).to match(%r{"GET \/ " 200 - })
+    expect(res.errors).not_to be_empty
+    expect(res.errors).to match(%r{"GET / " 200 - })
   end
 
   it 'logs in almost common log format' do
@@ -65,9 +65,9 @@ RSpec.describe Rack::NotSoCommonLogger do
       Rack::MockRequest.new(described_class.new(app, log)).get('/')
     end
 
-    md = %r{\[([^\]]+)\] "(\w+) \/ " (\d{3}) \d+ ([\d\.]+)}.match(log.string)
+    md = %r{\[([^\]]+)\] "(\w+) / " (\d{3}) \d+ ([\d.]+)}.match(log.string)
 
-    expect(md).to_not be_nil
+    expect(md).not_to be_nil
     time, method, status, duration = *md.captures
     expect(time).to eq Time.at(0).strftime('%d/%b/%Y:%H:%M:%S %z')
     expect(method).to eq 'GET'
@@ -83,7 +83,7 @@ RSpec.describe Rack::NotSoCommonLogger do
         ENV['SHOW_USER_GROUP_IN_LOGS'] = 'true'
       end
 
-      it 'it does not strip out the "user_group" param' do
+      it 'does not strip out the "user_group" param' do
         Rack::MockRequest.new(described_class.new(app, log)).get('/?user_group=darth%40vader.net')
 
         expect(log.string).to match(%r{/\?user_group=darth%40vader\.net})
@@ -95,7 +95,7 @@ RSpec.describe Rack::NotSoCommonLogger do
         ENV.delete('SHOW_USER_GROUP_IN_LOGS')
       end
 
-      it 'it hashes out the "user_group" URL param' do
+      it 'hashes out the "user_group" URL param' do
         Rack::MockRequest.new(described_class.new(app, log)).get('/?user_group=darth%40vader.net')
 
         expect(log.string).to match(%r{/\?user_group=XXXXX})

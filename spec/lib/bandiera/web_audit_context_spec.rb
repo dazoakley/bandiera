@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Bandiera::WebAuditContext do
+  subject { described_class.new(request) }
+
   let(:request) { Rack::Request.new(Rack::MockRequest.env_for('/a/path', 'REMOTE_ADDR' => '1.2.3.4')) }
-  subject { Bandiera::WebAuditContext.new(request) }
 
   it_behaves_like 'an audit context'
 

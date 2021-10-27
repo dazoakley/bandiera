@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class Hash
   def symbolize_keys
-    reduce({}) do |result, (key, value)|
+    each_with_object({}) do |(key, value), result|
       new_key   = case key
                   when String then key.to_sym
                   else key
@@ -12,7 +14,6 @@ class Hash
                   end
 
       result[new_key] = new_value
-      result
     end
   end
 end
