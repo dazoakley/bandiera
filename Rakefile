@@ -36,11 +36,13 @@ namespace :db do
     Bandiera::Db.rollback
   end
 
-  task demo_reset: :environment do |_cmd, _args|
+  task dev_setup: [:environment, :migrate] do |_cmd, _args|
     db   = Bandiera::Db.connect
-    serv = Bandiera::FeatureService.new(db: db)
+    serv = Bandiera::FeatureService.new()
 
     db[:groups].delete
+    db[:features].delete
+    db[:audit_records].delete
 
     serv.add_features(Bandiera::AnonymousAuditContext.new, [
                         {
