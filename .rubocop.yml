@@ -1,104 +1,40 @@
-AllCops:
-  StyleGuideCopsOnly: true
+---
+require:
+  - rubocop-rake
+  - rubocop-rspec
+  - rubocop-sequel
 
-Metrics/LineLength:
-  Description: 'Limit lines to 120 characters.'
-  Max: 120
+AllCops:
+  NewCops: enable
+
+Layout/LineLength:
   Enabled: true
+  Description: 'Limit lines to 125 characters.'
+  Max: 125
 
 Metrics/BlockLength:
-  ExcludedMethods:
-    - describe
-    - context
   Enabled: true
+  IgnoredMethods:
+    - before
+    - context
+    - describe
+    - let
+    - namespace
+    - shared_examples_for
 
 Metrics/MethodLength:
-  CountComments: false
+  Enabled: true
   Max: 20
-  Enabled: true
-
-Metrics/AbcSize:
-  Max: 40
-  Enabled: true
 
 Style/Documentation:
   Enabled: false
 
-Layout/SpaceBeforeFirstArg:
-  Enabled: false
-
-Style/BracesAroundHashParameters:
-  Enabled: false
-
-Style/CaseEquality:
-  Enabled: false
-
-Style/GuardClause:
-  Enabled: false
-
-Style/ConditionalAssignment:
-  Enabled: false
-
-Layout/IndentHash:
+Layout/FirstHashElementIndentation:
+  Enabled: true
   EnforcedStyle: consistent
-  Enabled: true
 
-Layout/AlignHash:
-  Severity: fatal
+Layout/HashAlignment:
   Enabled: true
+  Severity: fatal
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
-
-Layout/AlignParameters:
-  EnforcedStyle: with_fixed_indentation
-  Enabled: true
-
-Style/StringLiterals:
-  EnforcedStyle: single_quotes
-  Enabled: true
-
-Style/CollectionMethods:
-  PreferredMethods:
-    collect: 'map'
-    collect!: 'map!'
-    inject: 'reduce'
-    detect: 'find'
-    find_all: 'select'
-  Enabled: true
-
-Layout/DotPosition:
-  EnforcedStyle: leading
-  Enabled: true
-
-Style/DoubleNegation:
-  Enabled: false
-
-Style/Alias:
-  # I like alias_method with symbol parameters
-  Enabled: false
-
-Layout/SpaceAroundOperators:
-  # When true, allows most uses of extra spacing if the intent is to align
-  # with an operator on the previous or next line, not counting empty lines
-  # or comment lines.
-  AllowForAlignment: true
-  Enabled: true
-
-Style/SymbolArray:
-  # Turned off because the associated auto-correct makes a real mess
-  Enabled: false
-
-Style/FrozenStringLiteralComment:
-  # An 'every file in the repo' recommendation.
-  Enabled: false
-  Severity: warning
-
-Layout/EmptyLineAfterMagicComment:
-  # Nooo not another 'every file in the repo' recommendation.
-  Enabled: false
-  Severity: warning
-
-Style/GlobalVars:
-  # Doesn't justify a critical
-  Enabled: true
-  Severity: warning

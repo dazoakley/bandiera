@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 gem 'airbrake', require: false
@@ -19,15 +21,18 @@ gem 'sinatra'
 gem 'statsd-ruby', require: false
 
 group :test do
-  gem 'shotgun'
-  gem 'rubocop'
-  gem 'sqlite3'
-  gem 'rspec'
-  gem 'rack-test'
   gem 'capybara'
-  gem 'poltergeist'
-  gem 'webmock'
-  gem 'pry'
   gem 'guard-rspec', require: false
+  gem 'poltergeist'
+  gem 'pry'
+  gem 'rack-test'
+  gem 'rspec'
+  gem 'rubocop'
+  gem 'rubocop-rake', require: false
+  gem 'rubocop-rspec', require: false
+  gem 'rubocop-sequel', require: false
+  gem 'shotgun'
+  gem 'sqlite3'
   gem 'timecop'
+  gem 'webmock'
 end
