@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 ENV['RACK_ENV'] = 'test'
 
-require 'macmillan/utils/rspec/rspec_defaults'
 require 'macmillan/utils/rspec/webmock_helper'
 require 'macmillan/utils/test_helpers/codeclimate_helper'
 require 'macmillan/utils/test_helpers/simplecov_helper'
@@ -11,11 +12,11 @@ require 'pry'
 
 require_relative '../lib/bandiera'
 require_relative '../lib/bandiera/anonymous_audit_context'
-load File.expand_path('../../Rakefile', __FILE__)
+load File.expand_path('../Rakefile', __dir__)
 
 # load shared_examples
 shared_example_files = File.expand_path('shared_examples/**/*.rb', __dir__)
-Dir[shared_example_files].each(&method(:require))
+Dir[shared_example_files].sort.each(&method(:require))
 
 # Suppress logging
 Bandiera.logger = Logger.new('/dev/null')
@@ -23,13 +24,12 @@ Bandiera.statsd = Macmillan::Utils::StatsdStub.new
 
 # use an in-memory sqlite database for testing
 ENV['DATABASE_URL'] = 'sqlite:/'
-ENV['DATABASE_URL'] = 'jdbc:sqlite:' if RUBY_PLATFORM == 'java'
 
 DB = Bandiera::Db.connect
 Bandiera::Db.migrate
 
 RSpec.configure do |config|
-  config.after(:each) do
+  config.after do
     DB[:features].delete
     DB[:groups].delete
     DB[:audit_records].delete

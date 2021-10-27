@@ -11,7 +11,7 @@ RSpec.describe Bandiera::GUI do
   let(:audit_context) { Bandiera::AnonymousAuditContext.new }
 
   before(:all) do
-    app = Bandiera::GUI.new
+    app = described_class.new
     Capybara.app = Rack::Builder.new do
       use Macmillan::Utils::StatsdMiddleware, client: Bandiera.statsd
       run app
@@ -24,11 +24,36 @@ RSpec.describe Bandiera::GUI do
   before do
     @service.add_group(audit_context, 'nofeatures_group')
     @service.add_features(audit_context, [
-                            { group: 'pubserv',    name: 'show_subjects',  description: 'Show all subject related features', active: false },
-                            { group: 'pubserv',    name: 'show_search',    description: 'Show the search bar',               active: true  },
-                            { group: 'laserwolf',  name: 'enable_caching', description: 'Enable caching',                    active: false },
-                            { group: 'shunter',    name: 'stats_logging',  description: 'Log stats',                         active: true  },
-                            { group: 'parliament', name: 'show_search',    description: 'Show search box', active: false }
+                            {
+                              group:       'pubserv',
+                              name:        'show_subjects',
+                              description: 'Show all subject related features',
+                              active:      false
+                            },
+                            {
+                              group:       'pubserv',
+                              name:        'show_search',
+                              description: 'Show the search bar',
+                              active:      true
+                            },
+                            {
+                              group:       'laserwolf',
+                              name:        'enable_caching',
+                              description: 'Enable caching',
+                              active:      false
+                            },
+                            {
+                              group:       'shunter',
+                              name:        'stats_logging',
+                              description: 'Log stats',
+                              active:      true
+                            },
+                            {
+                              group:       'parliament',
+                              name:        'show_search',
+                              description: 'Show search box',
+                              active:      false
+                            }
                           ])
   end
 
@@ -70,7 +95,7 @@ RSpec.describe Bandiera::GUI do
     it 'shows all feature flags organised by group' do
       visit('/')
 
-      groups = get_groups_with_features
+      groups = find_groups_with_features
 
       expect(groups['nofeatures_group']).to match_array([])
       expect(groups['pubserv']).to match_array(%w[show_subjects show_search])
@@ -93,8 +118,8 @@ RSpec.describe Bandiera::GUI do
 
       toggle.click
 
-      expect(toggle_container).to_not have_css(".#{switch_class}")
-      expect(@service.fetch_feature(group, name).active?).to_not eq(active)
+      expect(toggle_container).not_to have_css(".#{switch_class}")
+      expect(@service.fetch_feature(group, name).active?).not_to eq(active)
     end
   end
 
@@ -110,7 +135,7 @@ RSpec.describe Bandiera::GUI do
       context 'and has features' do
         it 'shows features of group' do
           visit('/groups/pubserv')
-          groups = get_groups_with_features
+          groups = find_groups_with_features
 
           expect(groups['pubserv']).to match_array(%w[show_subjects show_search])
           expect(groups.size).to eq(1)
@@ -120,7 +145,7 @@ RSpec.describe Bandiera::GUI do
       context 'and doesnt have features' do
         it 'no features are showed' do
           visit('/groups/nofeatures_group')
-          groups = get_groups_with_features
+          groups = find_groups_with_features
 
           expect(groups.size).to eq(1)
           expect(groups['nofeatures_group']).to match_array([])
@@ -218,7 +243,7 @@ RSpec.describe Bandiera::GUI do
           feature = @service.fetch_feature('pubserv', 'TEST-FEATURE')
 
           expect(feature).to be_an_instance_of(Bandiera::Feature)
-          expect(feature.user_groups_configured?).to be_truthy
+          expect(feature).to be_user_groups_configured
           expect(feature.user_groups_list).to eq(%w[Editor Writer])
           expect(feature.user_groups_regex).to eq('.*Admin')
         end
@@ -242,7 +267,7 @@ RSpec.describe Bandiera::GUI do
           feature = @service.fetch_feature('parliament', 'dissolution')
 
           expect(feature).to be_an_instance_of(Bandiera::Feature)
-          expect(feature.user_groups_configured?).to be_truthy
+          expect(feature).to be_user_groups_configured
           expect(feature.start_time).to eq(Time.new(2017, 5, 6, 0, 25, 30))
           expect(feature.end_time).to eq(Time.new(2017, 6, 8, 23, 59, 59))
         end
@@ -404,14 +429,20 @@ RSpec.describe Bandiera::GUI do
       group_name, feature_name = click_delete_button
 
       check_success_flash('Feature deleted')
-      expect { @service.fetch_feature(group_name, feature_name) }.to raise_error(Bandiera::FeatureService::FeatureNotFound)
+      expect do
+        @service.fetch_feature(group_name, feature_name)
+      end.to raise_error(Bandiera::FeatureService::FeatureNotFound)
     end
 
     context 'when on a group page' do
       before do
         @service.add_features(audit_context,
-          [{ group: 'acidburn', name: 'force_push', description: 'Enable force push', active: false }]
-        )
+                              [{
+                                group:       'acidburn',
+                                name:        'force_push',
+                                description: 'Enable force push',
+                                active:      false
+                              }])
 
         page.driver.browser.header('Referer', 'http://example.com/groups/acidburn')
       end
@@ -454,7 +485,7 @@ RSpec.describe Bandiera::GUI do
     expect(page.find('.alert-danger')).to have_content(expected_text)
   end
 
-  def get_groups_with_features
+  def find_groups_with_features
     groups = {}
 
     all('.bandiera-feature-group').each do |div|

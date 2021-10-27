@@ -3,14 +3,14 @@
 require 'spec_helper'
 
 RSpec.describe Bandiera::CachingFeatureService do
+  subject { described_class.new(delegate) }
+
   let(:delegate)      { Bandiera::FeatureService.new }
   let(:audit_context) { Bandiera::AnonymousAuditContext.new }
   let(:group)         { Bandiera::Group.new(name: 'group1') }
   let(:groups)        { [Bandiera::Group.new(name: 'group1')] }
   let(:feature)       { Bandiera::Feature.new(name: 'feature1') }
   let(:features)      { [Bandiera::Feature.new(name: 'feature1'), Bandiera::Feature.new(name: 'feature2')] }
-
-  subject { Bandiera::CachingFeatureService.new(delegate) }
 
   it_behaves_like 'a feature service'
 
@@ -71,7 +71,7 @@ RSpec.describe Bandiera::CachingFeatureService do
       call_count = 0
       allow(delegate).to receive(:fetch_groups) do
         call_count += 1
-        call_count == 1 ? raise(SocketError.new) : groups
+        call_count == 1 ? raise(SocketError) : groups
       end
 
       expect { subject.fetch_groups }.to raise_error(SocketError)
@@ -104,7 +104,7 @@ RSpec.describe Bandiera::CachingFeatureService do
 
     describe 'with a custom cache time' do
       describe 'of a number' do
-        subject { Bandiera::CachingFeatureService.new(delegate, cache_ttl: 5) }
+        subject { described_class.new(delegate, cache_ttl: 5) }
 
         it 'expires the cache after the cache time' do
           expect(delegate).to receive(:fetch_groups).twice.and_return(groups)
@@ -122,7 +122,7 @@ RSpec.describe Bandiera::CachingFeatureService do
       end
 
       describe 'of nil' do
-        subject { Bandiera::CachingFeatureService.new(delegate, cache_ttl: nil) }
+        subject { described_class.new(delegate, cache_ttl: nil) }
 
         it 'expires the cache after the default cache time' do
           expect(delegate).to receive(:fetch_groups).twice.and_return(groups)
@@ -172,7 +172,7 @@ RSpec.describe Bandiera::CachingFeatureService do
       call_count = 0
       allow(delegate).to receive(:find_group) do
         call_count += 1
-        call_count == 1 ? raise(Bandiera::FeatureService::GroupNotFound.new) : group
+        call_count == 1 ? raise(Bandiera::FeatureService::GroupNotFound) : group
       end
 
       expect { subject.find_group('group1') }.to raise_error(Bandiera::FeatureService::GroupNotFound)
@@ -205,7 +205,7 @@ RSpec.describe Bandiera::CachingFeatureService do
 
     describe 'with a custom cache time' do
       describe 'of a number' do
-        subject { Bandiera::CachingFeatureService.new(delegate, cache_ttl: 5) }
+        subject { described_class.new(delegate, cache_ttl: 5) }
 
         it 'expires the cache after the cache time' do
           expect(delegate).to receive(:find_group).with('group1').twice.and_return(group)
@@ -223,7 +223,7 @@ RSpec.describe Bandiera::CachingFeatureService do
       end
 
       describe 'of nil' do
-        subject { Bandiera::CachingFeatureService.new(delegate, cache_ttl: nil) }
+        subject { described_class.new(delegate, cache_ttl: nil) }
 
         it 'expires the cache after the default cache time' do
           expect(delegate).to receive(:find_group).with('group1').twice.and_return(group)
@@ -363,7 +363,7 @@ RSpec.describe Bandiera::CachingFeatureService do
 
     it 'updates the feature on the delegate' do
       expect(delegate).to receive(:update_feature).with(audit_context, 'group1', 'feature1', updated_feature)
-        .and_return(feature)
+                                                  .and_return(feature)
 
       result = subject.update_feature(audit_context, 'group1', 'feature1', updated_feature)
       expect(result).to eq(feature)
@@ -422,7 +422,7 @@ RSpec.describe Bandiera::CachingFeatureService do
       call_count = 0
       allow(delegate).to receive(:fetch_feature) do
         call_count += 1
-        call_count == 1 ? raise(Bandiera::FeatureService::FeatureNotFound.new) : feature
+        call_count == 1 ? raise(Bandiera::FeatureService::FeatureNotFound) : feature
       end
 
       expect { subject.fetch_feature('group1', 'feature1') }.to raise_error(Bandiera::FeatureService::FeatureNotFound)
@@ -455,7 +455,7 @@ RSpec.describe Bandiera::CachingFeatureService do
 
     describe 'with a custom cache time' do
       describe 'of a number' do
-        subject { Bandiera::CachingFeatureService.new(delegate, cache_ttl: 5) }
+        subject { described_class.new(delegate, cache_ttl: 5) }
 
         it 'expires the cache after the cache time' do
           expect(delegate).to receive(:fetch_feature).with('group1', 'feature1').twice.and_return(feature)
@@ -473,7 +473,7 @@ RSpec.describe Bandiera::CachingFeatureService do
       end
 
       describe 'of nil' do
-        subject { Bandiera::CachingFeatureService.new(delegate, cache_ttl: nil) }
+        subject { described_class.new(delegate, cache_ttl: nil) }
 
         it 'expires the cache after the default cache time' do
           expect(delegate).to receive(:fetch_feature).with('group1', 'feature1').twice.and_return(feature)
@@ -523,7 +523,7 @@ RSpec.describe Bandiera::CachingFeatureService do
       call_count = 0
       allow(delegate).to receive(:fetch_group_features) do
         call_count += 1
-        call_count == 1 ? raise(Bandiera::FeatureService::GroupNotFound.new) : features
+        call_count == 1 ? raise(Bandiera::FeatureService::GroupNotFound) : features
       end
 
       expect { subject.fetch_group_features('group1') }.to raise_error(Bandiera::FeatureService::GroupNotFound)
@@ -556,7 +556,7 @@ RSpec.describe Bandiera::CachingFeatureService do
 
     describe 'with a custom cache time' do
       describe 'of a number' do
-        subject { Bandiera::CachingFeatureService.new(delegate, cache_ttl: 5) }
+        subject { described_class.new(delegate, cache_ttl: 5) }
 
         it 'expires the cache after the cache time' do
           expect(delegate).to receive(:fetch_group_features).with('group1').twice.and_return(features)
@@ -574,7 +574,7 @@ RSpec.describe Bandiera::CachingFeatureService do
       end
 
       describe 'of nil' do
-        subject { Bandiera::CachingFeatureService.new(delegate, cache_ttl: nil) }
+        subject { described_class.new(delegate, cache_ttl: nil) }
 
         it 'expires the cache after the default cache time' do
           expect(delegate).to receive(:fetch_group_features).with('group1').twice.and_return(features)
@@ -609,7 +609,7 @@ RSpec.describe Bandiera::CachingFeatureService do
 
         Timecop.freeze(Time.local(2017, 1, 1, 12, 0, 0))
 
-        (1..101).each {|i| subject.fetch_feature('group1', "feature#{i}")}
+        (1..101).each { |i| subject.fetch_feature('group1', "feature#{i}") }
 
         subject.fetch_feature('group1', 'feature1')
 
@@ -618,7 +618,7 @@ RSpec.describe Bandiera::CachingFeatureService do
     end
 
     describe 'with a custom cache size' do
-      subject { Bandiera::CachingFeatureService.new(delegate, cache_size: 10) }
+      subject { described_class.new(delegate, cache_size: 10) }
 
       it 'evicts the lru item from the cache after the specified cache size is exceeded' do
         expect(delegate).to receive(:fetch_feature).with('group1', 'feature1').twice.and_return(another_feature)
@@ -628,7 +628,7 @@ RSpec.describe Bandiera::CachingFeatureService do
 
         Timecop.freeze(Time.local(2017, 1, 1, 12, 0, 0))
 
-        (1..11).each {|i| subject.fetch_feature('group1', "feature#{i}")}
+        (1..11).each { |i| subject.fetch_feature('group1', "feature#{i}") }
 
         subject.fetch_feature('group1', 'feature1')
 
@@ -637,7 +637,7 @@ RSpec.describe Bandiera::CachingFeatureService do
     end
 
     describe 'with a nil cache size' do
-      subject { Bandiera::CachingFeatureService.new(delegate, cache_size: nil) }
+      subject { described_class.new(delegate, cache_size: nil) }
 
       it 'evicts the lru item from the cache after the default cache size is exceeded' do
         expect(delegate).to receive(:fetch_feature).with('group1', 'feature1').twice.and_return(another_feature)
@@ -647,7 +647,7 @@ RSpec.describe Bandiera::CachingFeatureService do
 
         Timecop.freeze(Time.local(2017, 1, 1, 12, 0, 0))
 
-        (1..101).each {|i| subject.fetch_feature('group1', "feature#{i}")}
+        (1..101).each { |i| subject.fetch_feature('group1', "feature#{i}") }
 
         subject.fetch_feature('group1', 'feature1')
 

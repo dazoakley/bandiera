@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bandiera
   class APIv2 < WebAppBase
     get '/all' do
@@ -17,7 +19,7 @@ module Bandiera
       end
 
       response           = { response: group_map }
-      response[:warning] = format_multiple_warning_messages(warnings, true) if warnings_found?(warnings)
+      response[:warning] = format_multiple_warning_messages(warnings, show_group: true) if warnings_found?(warnings)
 
       json_or_jsonp(response)
     end
@@ -78,7 +80,7 @@ module Bandiera
     def build_single_warning_reponse(warnings)
       if warnings.include?(:user_group) && warnings.include?(:user_id)
         'This feature is configured for both user groups and percentages - you must supply both ' \
-        '`user_group` and `user_id` params'
+          '`user_group` and `user_id` params'
       elsif warnings.include?(:user_group)
         'This feature is configured for user groups - you must supply a `user_group` param'
       elsif warnings.include?(:user_id)
@@ -113,20 +115,21 @@ module Bandiera
       end
     end
 
-    def format_multiple_warning_messages(error_map, show_group = false)
-      msg           = "The following warnings were raised on this request:\n"
+    def format_multiple_warning_messages(error_map, show_group: false)
       error_handles = {
         user_group: 'these features have user groups configured and require a `user_group` param',
         user_id:    'these features have user percentages configured and require a `user_id` param'
       }
 
-      msg << error_handles.map do |type, preamble|
+      error_handle_msgs = error_handles.map do |type, preamble|
         next if error_map[type].empty?
 
         features_with_warnings = names_for_warnings(error_map[type], show_group)
 
         "  * #{preamble}:\n" + features_with_warnings.map { |name| "    - #{name}\n" }.join
       end.join("\n")
+
+      "The following warnings were raised on this request:\n#{error_handle_msgs}"
     end
 
     def json_or_jsonp(data)

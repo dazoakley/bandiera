@@ -84,9 +84,7 @@ module Rack
 
       params = Rack::Utils.parse_nested_query(env[QUERY_STRING])
 
-      if ENV['SHOW_USER_GROUP_IN_LOGS'] != 'true' && params['user_group']
-        params['user_group'] = 'XXXXX'
-      end
+      params['user_group'] = 'XXXXX' if ENV['SHOW_USER_GROUP_IN_LOGS'] != 'true' && params['user_group']
 
       "?#{Rack::Utils.build_nested_query(params)}"
     end

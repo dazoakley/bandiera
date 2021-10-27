@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Bandiera::FeatureService do
+  subject { described_class.new(audit_log) }
+
   let(:audit_context) { Bandiera::AnonymousAuditContext.new }
   let(:audit_log) { Bandiera::AuditLogger.new }
-  subject { Bandiera::FeatureService.new(audit_log) }
 
   it_behaves_like 'a feature service'
 
@@ -36,10 +39,10 @@ RSpec.describe Bandiera::FeatureService do
         .exactly(3).times
 
       subject.add_features(audit_context, [
-        { name: 'feature1', group: 'group' },
-        { name: 'feature2', group: 'group' },
-        { name: 'feature3', group: 'group' }
-      ])
+                             { name: 'feature1', group: 'group' },
+                             { name: 'feature2', group: 'group' },
+                             { name: 'feature3', group: 'group' }
+                           ])
     end
   end
 

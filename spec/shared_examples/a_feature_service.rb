@@ -28,7 +28,7 @@ shared_examples_for 'a feature service' do
 
       it 'does not create a new group' do
         expect { subject.add_feature(audit_context, feat_data) }
-          .to_not(change { db[:groups].count })
+          .not_to(change { db[:groups].count })
       end
 
       it 'returns the created feature' do
@@ -183,7 +183,7 @@ shared_examples_for 'a feature service' do
       it 'returns correctly constructed features' do
         target = subject.add_features(audit_context, features).first
 
-        expect(target.user_groups).to_not be_empty
+        expect(target.user_groups).not_to be_empty
         expect(target.user_groups).to eq(user_groups)
       end
     end
@@ -222,7 +222,7 @@ shared_examples_for 'a feature service' do
 
       it 'does not remove the group' do
         expect { subject.remove_feature(audit_context, 'group', 'feat') }
-          .to_not(change { db[:groups].count })
+          .not_to(change { db[:groups].count })
       end
     end
   end

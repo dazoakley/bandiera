@@ -1,17 +1,10 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Bandiera::Feature do
-  let(:name)        { 'show-stuff' }
-  let(:group)       { Bandiera::Group.create(name: 'group_name') }
-  let(:description) { 'feature description' }
-  let(:active)      { true }
-  let(:user_groups) { nil }
-  let(:percentage)  { nil }
-  let(:start_time)  { nil }
-  let(:end_time)    { nil }
-
   subject do
-    Bandiera::Feature.create do |feat|
+    described_class.create do |feat|
       feat.name        = name
       feat.group       = group
       feat.description = description
@@ -22,6 +15,15 @@ RSpec.describe Bandiera::Feature do
       feat.end_time    = end_time    if end_time
     end
   end
+
+  let(:name)        { 'show-stuff' }
+  let(:group)       { Bandiera::Group.create(name: 'group_name') }
+  let(:description) { 'feature description' }
+  let(:active)      { true }
+  let(:user_groups) { nil }
+  let(:percentage)  { nil }
+  let(:start_time)  { nil }
+  let(:end_time)    { nil }
 
   describe 'a plain on/off feature flag' do
     it 'responds to #enabled?' do
@@ -50,7 +52,7 @@ RSpec.describe Bandiera::Feature do
   describe 'a feature for specific user groups' do
     context 'configured as a list of groups' do
       let(:user_group)  { 'admin' }
-      let(:user_groups) { { list: %w(admin editor) } }
+      let(:user_groups) { { list: %w[admin editor] } }
 
       context 'when @active is true' do
         describe '#enabled?' do
@@ -167,7 +169,7 @@ RSpec.describe Bandiera::Feature do
     end
 
     context 'configured as a combination of exact matches and a regex' do
-      let(:user_groups) { { list: %w(editor), regex: '.*admin' } }
+      let(:user_groups) { { list: %w[editor], regex: '.*admin' } }
 
       context 'when @active is true' do
         describe '#enabled?' do
@@ -276,7 +278,7 @@ RSpec.describe Bandiera::Feature do
   describe 'a feature configured for both user groups and a percentage of users' do
     context 'when @active is true' do
       context 'and the user matches on the user_group configuration' do
-        let(:user_groups) { { list: %w(admin editor) } }
+        let(:user_groups) { { list: %w[admin editor] } }
         let(:percentage)  { 5 }
 
         describe '#enabled?' do
@@ -287,7 +289,7 @@ RSpec.describe Bandiera::Feature do
       end
 
       context 'and the user does not match the user_groups, but does fall into the percentage' do
-        let(:user_groups) { { list: %w(admin editor) } }
+        let(:user_groups) { { list: %w[admin editor] } }
         let(:percentage)  { 100 }
 
         describe '#enabled?' do
@@ -298,7 +300,7 @@ RSpec.describe Bandiera::Feature do
       end
 
       context 'and the user matches neither the user_groups or falls into the percentage' do
-        let(:user_groups) { { list: %w(admin editor) } }
+        let(:user_groups) { { list: %w[admin editor] } }
         let(:percentage)  { 5 }
 
         before do
@@ -313,7 +315,7 @@ RSpec.describe Bandiera::Feature do
       end
 
       context 'when the user_group and/or user_id params are not passed' do
-        let(:user_groups) { { list: %w(admin editor) } }
+        let(:user_groups) { { list: %w[admin editor] } }
         let(:percentage)  { 100 }
 
         describe '#enabled?' do
@@ -325,7 +327,7 @@ RSpec.describe Bandiera::Feature do
     end
 
     context 'when @active is false' do
-      let(:user_groups) { { list: %w(admin editor) } }
+      let(:user_groups) { { list: %w[admin editor] } }
       let(:percentage)  { 100 }
       let(:active)      { false }
 
@@ -344,7 +346,7 @@ RSpec.describe Bandiera::Feature do
 
       describe '#validate' do
         it 'raises Sequel::ValidationFailed error with expected message' do
-          expect{ subject }.to raise_error(Sequel::ValidationFailed, 'end_time cannot be before start_time')
+          expect { subject }.to raise_error(Sequel::ValidationFailed, 'end_time cannot be before start_time')
         end
       end
     end
@@ -420,7 +422,7 @@ RSpec.describe Bandiera::Feature do
     end
 
     context 'with a user group feature' do
-      let(:user_groups) { { list: %w(admin editor) } }
+      let(:user_groups) { { list: %w[admin editor] } }
 
       context 'when user_group HAS been supplied' do
         it 'returns an empty array' do
@@ -452,7 +454,7 @@ RSpec.describe Bandiera::Feature do
     end
 
     context 'with a user group and percentage feature' do
-      let(:user_groups) { { list: %w(admin editor) } }
+      let(:user_groups) { { list: %w[admin editor] } }
       let(:percentage)  { 20 }
 
       context 'when user_group and user_id HAS been supplied' do
@@ -463,7 +465,7 @@ RSpec.describe Bandiera::Feature do
 
       context 'when user_group and user_id HAS NOT been supplied' do
         it 'returns a populated warning array' do
-          expect(subject.report_enabled_warnings).to eq([:user_group, :user_id])
+          expect(subject.report_enabled_warnings).to eq(%i[user_group user_id])
         end
       end
 
@@ -482,10 +484,10 @@ RSpec.describe Bandiera::Feature do
   end
 
   describe '#user_groups_configured?' do
-    let(:user_groups) { Hash.new }
+    let(:user_groups) { {} }
 
     context 'if a user_group list have been configured' do
-      let(:user_groups) { { list: %w(boo bar) } }
+      let(:user_groups) { { list: %w[boo bar] } }
 
       it 'returns true' do
         expect(subject.user_groups_configured?).to eq true

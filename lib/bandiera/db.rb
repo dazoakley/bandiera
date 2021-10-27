@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sequel'
 require 'yaml'
 
@@ -8,12 +10,13 @@ module Bandiera
   class Db
     def self.connect
       raise ArgumentError, 'You must set a DATABASE_URL environment variable' unless ENV['DATABASE_URL']
-      @db ||= Sequel.connect(ENV['DATABASE_URL'])
+
+      @connect ||= Sequel.connect(ENV['DATABASE_URL'])
     end
 
     def self.disconnect
-      @db.disconnect if @db
-      @db = nil
+      @connect&.disconnect
+      @connect = nil
     end
 
     def self.migrate

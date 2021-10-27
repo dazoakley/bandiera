@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bandiera
   class Feature < Sequel::Model
     many_to_one :group
@@ -18,9 +20,6 @@ module Bandiera
     end
 
     def active?
-      # work around for JRuby's SQLite connector returning numerical values instead of boolean
-      return false if active == 0
-      return true if active == 1
       active
     end
 

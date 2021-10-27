@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bandiera
   class Group < Sequel::Model
     one_to_many :features, order: Sequel.asc(:name)

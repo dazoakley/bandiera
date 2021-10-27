@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $LOAD_PATH.unshift File.join(__FILE__, '../lib')
 
 require 'bandiera'
@@ -13,9 +15,7 @@ if ENV['AIRBRAKE_API_KEY'] && ENV['AIRBRAKE_PROJECT_ID']
   end
 
   Airbrake.add_filter do |notice|
-    if notice[:errors].any? { |error| error[:type] == 'Sinatra::NotFound' }
-      notice.ignore!
-    end
+    notice.ignore! if notice[:errors].any? { |error| error[:type] == 'Sinatra::NotFound' }
   end
 end
 
@@ -38,7 +38,7 @@ if ENV['RACK_CORS_ORIGINS']
   use Rack::Cors do
     allow do
       origins ENV['RACK_CORS_ORIGINS']
-      resource '/api/v2/*', headers: :any, methods: [:get, :options]
+      resource '/api/v2/*', headers: :any, methods: %i[get options]
     end
   end
 end
