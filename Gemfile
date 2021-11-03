@@ -10,7 +10,7 @@ gem 'macmillan-utils'
 gem 'mysql2'
 gem 'nokogiri', '>= 1.12.5'
 gem 'pg'
-gem 'prometheus-client-mmap'
+gem 'prometheus-client'
 gem 'puma'
 gem 'rack-cors'
 gem 'rack-flash3'
@@ -18,7 +18,6 @@ gem 'rake'
 gem 'sentry-raven', require: false
 gem 'sequel'
 gem 'sinatra'
-gem 'statsd-ruby', require: false
 
 group :test do
   gem 'capybara'

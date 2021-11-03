@@ -11,7 +11,6 @@ RSpec.describe Bandiera::APIv1 do
   let(:app) do
     app_instance = instance
     Rack::Builder.new do
-      use Macmillan::Utils::StatsdMiddleware, client: Bandiera.statsd
       run app_instance
     end
   end

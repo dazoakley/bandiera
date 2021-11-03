@@ -13,7 +13,6 @@ RSpec.describe Bandiera::GUI do
   before(:all) do
     app = described_class.new
     Capybara.app = Rack::Builder.new do
-      use Macmillan::Utils::StatsdMiddleware, client: Bandiera.statsd
       run app
     end
     @service = app.settings.feature_service
