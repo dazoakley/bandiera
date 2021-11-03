@@ -6,7 +6,6 @@ gem 'airbrake', require: false
 gem 'dotenv'
 gem 'erubis'
 gem 'lru_redux'
-gem 'macmillan-utils'
 gem 'mysql2'
 gem 'nokogiri', '>= 1.12.5'
 gem 'pg'
@@ -31,6 +30,7 @@ group :test do
   gem 'rubocop-rspec', require: false
   gem 'rubocop-sequel', require: false
   gem 'shotgun'
+  gem 'simplecov', require: false
   gem 'sqlite3'
   gem 'timecop'
   gem 'webmock'
