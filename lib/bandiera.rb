@@ -25,7 +25,7 @@ module Bandiera
   autoload :GUI,                    'bandiera/gui'
 
   class << self
-    def init(_environment)
+    def init
       Dotenv.load
       Db.connect
     end
