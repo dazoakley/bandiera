@@ -27,9 +27,6 @@ COPY . .
 
 USER bandiera
 
-ENV prometheus_multiproc_dir=/tmp/prometheus_multiproc_dir
-RUN mkdir ${prometheus_multiproc_dir}
-
 ENV RACK_ENV=production
 
 EXPOSE 5000
