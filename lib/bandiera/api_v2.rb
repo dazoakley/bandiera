@@ -7,8 +7,6 @@ module Bandiera
     end
 
     def _get_all
-      add_statsd_timer 'api.v2.all.get'
-
       group_map = {}
       warnings  = { user_group: [], user_id: [] }
 
@@ -29,8 +27,6 @@ module Bandiera
     end
 
     def _get_group_features(group_name)
-      add_statsd_timer 'api.v2.group_features.get'
-
       response = { response: {} }
 
       begin
@@ -50,8 +46,6 @@ module Bandiera
     end
 
     def _get_single_feature(group_name, feature_name)
-      add_statsd_timer 'api.v2.individual_feature.get'
-
       response = { response: false }
 
       begin

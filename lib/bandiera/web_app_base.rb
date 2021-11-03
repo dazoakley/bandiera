@@ -1,13 +1,10 @@
 # frozen_string_literal: true
 
 require 'sinatra/base'
-require 'macmillan/utils/statsd_controller_helper'
 
 module Bandiera
   class WebAppBase < Sinatra::Base
     class InvalidParams < StandardError; end
-
-    include Macmillan::Utils::StatsdControllerHelper
 
     configure do
       enable :raise_errors if ENV['AIRBRAKE_API_KEY'] && ENV['AIRBRAKE_PROJECT_ID']
@@ -29,7 +26,6 @@ module Bandiera
       path   = request.path.sub(%r{^/}, '').tr('/', '.')
       path   = 'homepage' if path.empty?
       method = request.request_method.downcase
-      add_statsd_timer_and_increment "#{path}.#{method}"
     end
 
     private

@@ -3,6 +3,7 @@
 require 'dotenv'
 require 'json'
 require 'logger'
+require 'prometheus/client'
 require 'sequel'
 require_relative 'hash'
 
@@ -29,6 +30,8 @@ module Bandiera
       Db.connect
     end
 
+    attr_writer :logger
+
     def logger
       return @logger if @logger
 
@@ -42,34 +45,6 @@ module Bandiera
       @logger.level = Logger.const_get(ENV.fetch('LOG_LEVEL', 'INFO').upcase)
 
       @logger
-    end
-    attr_writer :logger, :statsd
-
-    def statsd
-      @statsd ||= if ENV['STATSD_HOST'] && ENV['STATSD_PORT']
-                    build_statsd_client
-                  else
-                    require 'macmillan/utils/statsd_stub'
-                    Macmillan::Utils::StatsdStub.new
-                  end
-    end
-
-    private
-
-    def build_statsd_client
-      require 'statsd-ruby'
-      require 'macmillan/utils/statsd_decorator'
-
-      statsd = Statsd.new(ENV['STATSD_HOST'], ENV['STATSD_PORT'])
-      statsd.namespace = statsd_namespace
-      Macmillan::Utils::StatsdDecorator.new(statsd, ENV['RACK_ENV'], logger)
-    end
-
-    def statsd_namespace
-      hostname = `hostname`.chomp.downcase.sub('.nature.com', '')
-      tier     = hostname =~ /test/ ? 'test' : 'live'
-
-      ['bandiera', tier, hostname, RUBY_ENGINE].join('.')
     end
   end
 end

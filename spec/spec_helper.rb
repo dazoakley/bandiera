@@ -4,7 +4,6 @@ ENV['RACK_ENV'] = 'test'
 
 require_relative 'helpers/webmock_helper'
 require_relative 'helpers/simplecov_helper'
-require 'macmillan/utils/statsd_stub'
 
 require 'timecop'
 require 'pry'
@@ -19,7 +18,6 @@ Dir[shared_example_files].sort.each(&method(:require))
 
 # Suppress logging
 Bandiera.logger = Logger.new('/dev/null')
-Bandiera.statsd = Macmillan::Utils::StatsdStub.new
 
 # use an in-memory sqlite database for testing
 ENV['DATABASE_URL'] = 'sqlite:/'
