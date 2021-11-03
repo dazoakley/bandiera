@@ -1,8 +1,16 @@
-= 4.0.0 / TBC
+= 4.0.0 / 2021-11-03
 
 Re-implementation of the audit logging feature - this unfortunately is a backwards incompatible change, hence the major version bump. As part of the database migration it **will** truncate your audit_records table. Audit logging is now permanently on (with no option to remove).
 
-We have removed the syslog logging capabilities from Bandiera and now default to logging to STDOUT. This is the norm for containerised applications and running via a container is our recommended deployment option.
+Removed the syslog logging capabilities and now default to logging to STDOUT. This is the norm for containerised applications and running via a container is our recommended deployment option.
+
+Removed the statsd based metrics capabilities and now just provide prometheus metrics (on /metrics). Prometheus seems more prevalent these days...
+
+Removed the dependency on a very outdated gem - `macmillan-utils`.
+
+Removed the unicorn config. As the container is the recommended deployment option (and this uses puma), this was no longer needed.
+
+Updated to use Ruby 3.0.2.
 
 = 3.5.11 / 2021-10-18
 
