@@ -18,14 +18,19 @@ rescue LoadError
   warn 'Could not load RSpec tasks'
 end
 
+desc 'Run Bandiera.init'
+task :init do
+  Bandiera.init
+end
+
 namespace :db do
   desc 'Run DB migrations'
-  task :migrate do
+  task migrate: %i[init] do
     Bandiera::Db.migrate
   end
 
   desc 'Rollback the DB'
-  task :rollback do
+  task rollback: %i[init] do
     Bandiera::Db.rollback
   end
 

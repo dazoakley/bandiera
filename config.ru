@@ -3,7 +3,7 @@
 $LOAD_PATH.unshift File.join(__FILE__, '../lib')
 
 require 'bandiera'
-Bandiera.init(ENV['RACK_ENV'] || 'development')
+Bandiera.init
 
 if ENV['AIRBRAKE_API_KEY'] && ENV['AIRBRAKE_PROJECT_ID']
   require 'socket'
