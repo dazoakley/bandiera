@@ -3,8 +3,7 @@
 ENV['RACK_ENV'] = 'test'
 
 require 'macmillan/utils/rspec/webmock_helper'
-require 'macmillan/utils/test_helpers/codeclimate_helper'
-require 'macmillan/utils/test_helpers/simplecov_helper'
+require_relative 'simplecov_helper'
 require 'macmillan/utils/statsd_stub'
 
 require 'timecop'
