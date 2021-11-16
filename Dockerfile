@@ -8,18 +8,19 @@ RUN apk update && \
   update-ca-certificates && \
   rm -rf /var/cache/apk/*
 
-RUN addgroup bandiera && \
-  adduser -D -G bandiera -h /home/bandiera bandiera
+RUN gem install bundler
+
+RUN addgroup -S -g 2000 bandiera && \
+  adduser -S -u 2000 -D -G bandiera -h /home/bandiera bandiera
 
 WORKDIR /home/bandiera
-
-RUN gem install bundler
 
 COPY Gemfile Gemfile
 COPY Gemfile.lock Gemfile.lock
 
 RUN bundle config set --local without 'test' && \
   bundle config set --local deployment 'true' && \
+  bundle config set --local bin /home/bandiera/bin && \
   bundle config set --local frozen 'true' && \
   bundle install --jobs 4
 
