@@ -1,0 +1,21 @@
+---
+name: Daily Checks
+
+on:
+  schedule:
+    - cron: '0 1 * * *'  # every day at 01:00
+
+jobs:
+  trivy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trivy Scan on "latest" docker tag
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: docker.io/dazoakley/bandiera:latest
+          format: table
+          exit-code: 1
+          ignore-unfixed: true
+          vuln-type: os,library
+          severity: CRITICAL,HIGH
+          skip-dirs: /usr/local/lib/ruby/gems
