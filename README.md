@@ -6,6 +6,7 @@ REST API. It also has a simple web interface for setting up and configuring
 flags.
 
 [![CI](https://github.com/dazoakley/bandiera/actions/workflows/ci.yml/badge.svg)](https://github.com/dazoakley/bandiera/actions/workflows/ci.yml)
+[![Daily Checks](https://github.com/dazoakley/bandiera/actions/workflows/daily.yml/badge.svg)](https://github.com/dazoakley/bandiera/actions/workflows/daily.yml)
 [![GPLv3 licensed][shield-license]][info-license]
 
 # Bandiera Client Libraries
