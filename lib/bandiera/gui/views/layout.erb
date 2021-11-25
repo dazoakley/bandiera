@@ -55,7 +55,9 @@
             <small>
               &copy; <%= Time.now.year %> Springer Nature.<br/>
               Bandiera is licensed under the GNU General Public License 3.0.<br/>
-              Version <%= Bandiera::VERSION %>
+              Version: <%= Bandiera.version %><br/>
+              Commit: <%= Bandiera.revision %><br/>
+              Built: <%= Bandiera.build_time %>
             </small>
           </div>
           <div class="col-md-7">

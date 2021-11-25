@@ -1,6 +1,13 @@
 FROM ruby:3.0.2-alpine
 
-LABEL org.opencontainers.image.authors="daz.oakley@gmail.com"
+LABEL org.opencontainers.image.authors="Darren Oakley <daz.oakley@gmail.com>"
+
+ARG VERSION=local
+ENV VERSION=${VERSION}
+ARG REVISION=gitsha
+ENV REVISION=${REVISION}
+ARG BUILDTIME=buildtime
+ENV BUILDTIME=${BUILDTIME}
 
 RUN apk update && \
   apk upgrade && \

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'date'
 require 'dotenv'
 require 'json'
 require 'logger'
@@ -10,7 +11,6 @@ require_relative 'hash'
 GC::Profiler.enable
 
 module Bandiera
-  autoload :VERSION,                'bandiera/version'
   autoload :Db,                     'bandiera/db'
   autoload :WebAuditContext,        'bandiera/web_audit_context'
   autoload :AuditLogger,            'bandiera/audit_logger'
@@ -45,6 +45,18 @@ module Bandiera
       @logger.level = Logger.const_get(ENV.fetch('LOG_LEVEL', 'INFO').upcase)
 
       @logger
+    end
+
+    def version
+      ENV.fetch('VERSION', 'local')
+    end
+
+    def revision
+      ENV.fetch('REVISION', 'gitsha')
+    end
+
+    def build_time
+      ENV.fetch('BUILDTIME', DateTime.now.iso8601)
     end
   end
 end
