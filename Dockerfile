@@ -1,4 +1,4 @@
-FROM ruby:3.0.2-alpine
+FROM ruby:3.0.3-alpine
 
 LABEL org.opencontainers.image.authors="Darren Oakley <daz.oakley@gmail.com>"
 
