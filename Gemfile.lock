@@ -131,7 +131,7 @@ GEM
       rubocop (~> 1.0)
     rubocop-rspec (2.11.1)
       rubocop (~> 1.19)
-    rubocop-sequel (0.3.3)
+    rubocop-sequel (0.3.4)
       rubocop (~> 1.0)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
