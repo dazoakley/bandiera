@@ -1,3 +1,7 @@
+**UPDATE February, 2023: Unfortunatley I just don't have time (or the enthusiasim) to keep this project up to date and working as I'm no longer using it anywhere.  If anyone is still using this in production and would like to see it stay alive please get in touch. :smile:**
+
+---
+
 # Bandiera
 
 Bandiera is a simple, stand-alone feature flagging service that is not tied to
